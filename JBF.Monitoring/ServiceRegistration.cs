@@ -1,7 +1,6 @@
 ﻿using Azure.Monitor.OpenTelemetry.AspNetCore;
-using JBF.Core.Monitoring.AspNetCore.HealthChecks;
-using JBF.Core.Monitoring.HealthChecks;
-using JBF.Core.Monitoring.Manifests;
+using JBF.Monitoring.HealthChecks;
+using JBF.Monitoring.Manifests;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Configuration;
@@ -14,7 +13,7 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 using System.Reflection;
 
-namespace JBF.Core.Monitoring.Functions;
+namespace JBF.Monitoring;
 
 public static class ServiceRegistration
 {
@@ -23,7 +22,7 @@ public static class ServiceRegistration
         IConfiguration configuration,
         IHostEnvironment environment,
         Action<IHealthChecksBuilder>? configureHealthChecks = null,
-        Action<IOpenTelemetryBuilder>? configureOpenTelemetry = null)
+        Action<OpenTelemetryBuilder>? configureOpenTelemetry = null)
     {
         // Manifest
         string applicationName = configuration["Manifest:Name"]

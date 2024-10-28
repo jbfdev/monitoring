@@ -1,9 +1,9 @@
 ﻿using Grpc.Core;
-using JBF.Core.Monitoring.Manifests;
+using JBF.Monitoring.Manifests;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 
-namespace JBF.Core.Monitoring.HealthChecks;
+namespace JBF.Monitoring.HealthChecks;
 
 public class HealthCheckPublisher(Manifest manifest, ILogger<HealthCheckPublisher> logger) : IHealthCheckPublisher
 {
@@ -15,7 +15,7 @@ public class HealthCheckPublisher(Manifest manifest, ILogger<HealthCheckPublishe
 
         foreach (var entry in mappedReport.Checks)
         {
-            logger.LogInformation(_healthCheckEventId, "Health check: {ServiceName} {ServiceStatus} {ServiceUpSince} {CheckDescription} {CheckStatus}, {CheckStatusMessage}, {CheckIssues}", 
+            logger.LogInformation(_healthCheckEventId, "Health check: {ServiceName} {ServiceStatus} {ServiceUpSince} {CheckDescription} {CheckStatus}, {CheckStatusMessage}, {CheckIssues}",
                 mappedReport.Name, mappedReport.Status, mappedReport.SystemStartup, entry.Description, entry.Status, entry.StatusMessage, string.Join(';', entry.Issues));
         }
 

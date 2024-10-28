@@ -1,11 +1,12 @@
 ﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
+using System.Text.Json.Serialization;
 
-namespace JBF.Core.Monitoring.HealthChecks;
+namespace JBF.Monitoring.HealthChecks;
 
 public record HealthCheckReport
 {
     public required string Name { get; set; }
-    public required string Status { get; set; }
+    public required HealthStatus Status { get; set; }
     public List<string> Issues { get; set; } = [];
     public required DateTimeOffset SystemStartup { get; set; }
     public required string Environment { get; set; }

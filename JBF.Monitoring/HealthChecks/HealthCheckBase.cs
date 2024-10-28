@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
 
-namespace JBF.Core.Monitoring.HealthChecks;
+namespace JBF.Monitoring.HealthChecks;
 
 public abstract class HealthCheckBase : IHealthCheck
 {

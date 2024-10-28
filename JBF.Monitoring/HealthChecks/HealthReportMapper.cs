@@ -1,7 +1,7 @@
-﻿using JBF.Core.Monitoring.Manifests;
+﻿using JBF.Monitoring.Manifests;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
-namespace JBF.Core.Monitoring.HealthChecks;
+namespace JBF.Monitoring.HealthChecks;
 
 public static class HealthReportMapper
 {
@@ -11,7 +11,7 @@ public static class HealthReportMapper
         {
             Name = manifest.Name,
             Environment = manifest.Environment,
-            Status = report.Status.ToString(),
+            Status = report.Status,
             SystemStartup = manifest.SystemStartup,
         };
 

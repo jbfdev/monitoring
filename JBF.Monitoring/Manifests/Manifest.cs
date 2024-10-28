@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Hosting;
 using System.Reflection;
 
-namespace JBF.Core.Monitoring.Manifests;
+namespace JBF.Monitoring.Manifests;
 
 public class Manifest
 {

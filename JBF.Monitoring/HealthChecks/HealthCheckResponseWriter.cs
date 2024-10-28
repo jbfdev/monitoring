@@ -1,12 +1,11 @@
-﻿using JBF.Core.Monitoring.HealthChecks;
-using JBF.Core.Monitoring.Manifests;
+﻿using JBF.Monitoring.Manifests;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace JBF.Core.Monitoring.AspNetCore.HealthChecks;
+namespace JBF.Monitoring.HealthChecks;
 
 public static class HealthCheckResponseWriter
 {

@@ -1,6 +1,6 @@
 ﻿using OpenTelemetry.Resources;
 
-namespace JBF.Core.Monitoring.Manifests;
+namespace JBF.Monitoring.Manifests;
 
 public class ManifestResourceDetector(Manifest manifest) : IResourceDetector
 {
