@@ -1,11 +1,12 @@
 ﻿using Azure.Monitor.OpenTelemetry.AspNetCore;
+using JBF.Core.Monitoring.AspNetCore.HealthChecks;
 using JBF.Core.Monitoring.HealthChecks;
 using JBF.Core.Monitoring.Manifests;
-using Microsoft.Azure.Functions.Worker.OpenTelemetry;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Microsoft.Extensions.Diagnostics.Metrics;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OpenTelemetry;
@@ -55,8 +56,6 @@ public static class ServiceRegistration
                 resourceBuilder.AddDetector((provider) => provider.GetRequiredService<ManifestResourceDetector>());
             });
 
-        openTelemetryBuilder.UseFunctionsWorkerDefaults();
-
         openTelemetryBuilder.WithTracing(tracingBuilder =>
         {
             tracingBuilder.AddAspNetCoreInstrumentation();
@@ -93,5 +92,20 @@ public static class ServiceRegistration
         configureOpenTelemetry?.Invoke(openTelemetryBuilder);
 
         return services;
+    }
+
+    public static IApplicationBuilder UseMonitoring(this IApplicationBuilder app)
+    {
+        app.UseHealthChecks("/health-probe", new HealthCheckOptions()
+        {
+            Predicate = (_) => false
+        });
+
+        app.UseHealthChecks("/health-check", new HealthCheckOptions()
+        {
+            ResponseWriter = HealthCheckResponseWriter.WriteHealthCheckResponse
+        });
+
+        return app;
     }
 }
