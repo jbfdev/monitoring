@@ -1,4 +1,4 @@
-# AspNet Core Apps Monitoring Compliance
+# JBF Monitoring Compliance
 
 To comply with our monitoring requirements, all API must include the following endpoint for health checks. These ensure that the system health and readiness are monitored and reported correctly.
 
@@ -28,7 +28,7 @@ public class SampleHealthCheck : HealthCheckBase
 Add the following code to your AspNet Core app to register and configure the monitoring services:
 
 ```csharp
-using JBF.Core.Monitoring.AspNetCore;
+using JBF.Monitoring;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -51,7 +51,7 @@ app.Run();
 Add the following code to your Azure Funtions app to register and configure the monitoring services:
 
 ```csharp
-using JBF.Core.Monitoring.Functions;
+using JBF.Monitoring;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
