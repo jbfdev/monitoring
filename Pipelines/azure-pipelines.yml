@@ -1,0 +1,61 @@
+pool:
+  vmImage: 'windows-latest'
+
+variables:  
+  BuildPlatform: 'any cpu'
+  BuildConfiguration: 'Release'
+  Solution: 'JBF.NuGet.Monitoring'
+  ProjectFile: 'JBF.Monitoring/JBF.Monitoring.csproj'
+  Feed: '$(VstsFeed)'
+
+steps:
+- checkout: self
+  fetchDepth: 0
+
+- task: UseDotNet@2
+  displayName: 'Use .NET Core sdk'
+  inputs:
+    packageType: 'sdk'
+    version: '8.0.x'
+
+- task: gitversion/setup@0
+  displayName: 'Gitversion setup'
+  inputs:
+    versionSpec: '5.x'
+
+- task: gitversion/execute@0
+  displayName: 'Gitversion execute'
+  inputs:
+    updateAssemblyInfo: false
+    useConfigFile: true
+    configFilePath: 'GitVersion.yml'
+
+- task: DotNetCoreCLI@2
+  displayName: Build
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet test $(BuildConfiguration)'
+  inputs:
+    command: test
+    projects: '**/*Tests.csproj'
+    arguments: '--configuration $(BuildConfiguration) --collect "Code coverage" --no-restore --no-build'
+
+- task: DotNetCoreCLI@2
+  displayName: Pack
+  inputs:
+    command: 'pack'
+    packagesToPack: '$(ProjectFile)'
+    versioningScheme: byEnvVar
+    versionEnvVar: 'GitVersion.SemVer'
+    custom: '-p:Version=$(Build.BuildNumber) -p:AssemblyVersion=$(Build.BuildNumber)'
+
+- task: DotNetCoreCLI@2
+  displayName: Push
+  inputs:
+    command: 'push'
+    nuGetFeedType: 'internal'
+    versioningScheme: byBuildNumber
+    publishVstsFeed: $(Feed)
