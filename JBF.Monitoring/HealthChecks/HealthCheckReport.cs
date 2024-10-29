@@ -26,6 +26,7 @@ public record HealthCheck
     {
         Status = status;
         StatusMessage = statusMessage;
+        Updated = DateTimeOffset.UtcNow;
         Issues = issues?.ToArray() ?? [];
         Data = data ?? new Dictionary<string, object>();
     }
