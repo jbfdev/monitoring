@@ -12,26 +12,44 @@ public static class HealthReportMapper
             Name = manifest.Name,
             Environment = manifest.Environment,
             Status = report.Status,
-            SystemStartup = manifest.SystemStartup,
+            SystemStartup = manifest.SystemStartup
         };
 
         foreach (var item in report.Entries)
         {
-            var updated = (DateTimeOffset)item.Value.Data[nameof(HealthCheck.Updated)];
-            var issues = (string[])item.Value.Data[nameof(HealthCheck.Issues)];
-            var statusMessage = (string)item.Value.Data[nameof(HealthCheck.StatusMessage)];
-
-            HealthCheck healthCheckEntry = new(item.Value.Status)
+            try
             {
-                Description = item.Key,
-                Status = item.Value.Status,
-                StatusMessage = statusMessage,
-                Updated = updated,
-                Issues = issues
-            };
+                if (!item.Value.Data.TryGetValue(nameof(HealthCheck.Updated), out var updatedObj)
+                    && updatedObj is not DateTimeOffset)
+                    continue;
+                var updated = (DateTimeOffset)updatedObj;
+            
+                if (!item.Value.Data.TryGetValue(nameof(HealthCheck.Issues), out var issuesObj)
+                    && issuesObj is not string[])
+                    continue;
+                var issues = (string[]?)issuesObj ?? [];
+            
+                if (!item.Value.Data.TryGetValue(nameof(HealthCheck.Updated), out var statusMessageObj)
+                    && statusMessageObj is not string)
+                    continue;
+                var statusMessage = (string)statusMessageObj;
 
-            healthCheckResponse.Issues.AddRange(issues.Select(i => $"{healthCheckEntry.Description}: {i}"));
-            healthCheckResponse.Checks.Add(healthCheckEntry);
+                HealthCheck healthCheckEntry = new(item.Value.Status)
+                {
+                    Description = item.Key,
+                    Status = item.Value.Status,
+                    StatusMessage = statusMessage,
+                    Updated = updated,
+                    Issues = issues
+                };
+
+                healthCheckResponse.Issues.AddRange(issues.Select(i => $"{healthCheckEntry.Description}: {i}"));
+                healthCheckResponse.Checks.Add(healthCheckEntry);
+            }
+            catch
+            {
+                //Continue silently on non-compliant HealthCheckEntry
+            }
         }
 
         return healthCheckResponse;
