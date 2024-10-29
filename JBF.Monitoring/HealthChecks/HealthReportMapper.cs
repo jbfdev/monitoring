@@ -17,11 +17,11 @@ public static class HealthReportMapper
 
         foreach (var item in report.Entries)
         {
-            var updated = (DateTimeOffset)item.Value.Data[nameof(HealthCheckResult.Updated)];
-            var issues = (string[])item.Value.Data[nameof(HealthCheckResult.Issues)];
-            var statusMessage = (string)item.Value.Data[nameof(HealthCheckResult.StatusMessage)];
+            var updated = (DateTimeOffset)item.Value.Data[nameof(HealthCheck.Updated)];
+            var issues = (string[])item.Value.Data[nameof(HealthCheck.Issues)];
+            var statusMessage = (string)item.Value.Data[nameof(HealthCheck.StatusMessage)];
 
-            HealthCheckResult healthCheckEntry = new(item.Value.Status)
+            HealthCheck healthCheckEntry = new(item.Value.Status)
             {
                 Description = item.Key,
                 Status = item.Value.Status,
@@ -37,16 +37,16 @@ public static class HealthReportMapper
         return healthCheckResponse;
     }
 
-    public static Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckResult CreateFrom(HealthCheckResult healthCheckEntry)
+    public static HealthCheckResult CreateFrom(HealthCheck healthCheckEntry)
     {
         var data = new Dictionary<string, object>
         {
-            { nameof(HealthCheckResult.Updated), healthCheckEntry.Updated },
-            { nameof(HealthCheckResult.Issues), healthCheckEntry.Issues },
-            { nameof(HealthCheckResult.StatusMessage), healthCheckEntry.StatusMessage ?? "" }
+            { nameof(HealthCheck.Updated), healthCheckEntry.Updated },
+            { nameof(HealthCheck.Issues), healthCheckEntry.Issues },
+            { nameof(HealthCheck.StatusMessage), healthCheckEntry.StatusMessage ?? "" }
         };
 
-        return new Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckResult(
+        return new HealthCheckResult(
             status: healthCheckEntry.Status,
             description: healthCheckEntry.Description,
             data: data);

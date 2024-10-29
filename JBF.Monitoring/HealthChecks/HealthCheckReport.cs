@@ -5,24 +5,24 @@ namespace JBF.Monitoring.HealthChecks;
 
 public record HealthCheckReport
 {
-    public required string Name { get; set; }
-    public required HealthStatus Status { get; set; }
-    public List<string> Issues { get; set; } = [];
-    public required DateTimeOffset SystemStartup { get; set; }
-    public required string Environment { get; set; }
-    public List<HealthCheckResult> Checks { get; set; } = [];
+    public required string Name { get; init; }
+    public required HealthStatus Status { get; init; }
+    public List<string> Issues { get; } = [];
+    public required DateTimeOffset SystemStartup { get; init; }
+    public required string Environment { get; init; }
+    public List<HealthCheck> Checks { get; } = [];
 }
 
-public record HealthCheckResult
+public record HealthCheck
 {
-    public string? Description { get; set; }
-    public HealthStatus Status { get; set; }
-    public DateTimeOffset Updated { get; set; }
-    public string? StatusMessage { get; set; }
-    public string[] Issues { get; set; } = [];
-    public IDictionary<string, object> Data { get; set; }
+    public string? Description { get; init; }
+    public HealthStatus Status { get; init; }
+    public DateTimeOffset Updated { get; init; }
+    public string? StatusMessage { get; init; }
+    public string[] Issues { get; init; } = [];
+    public IDictionary<string, object> Data { get; private set; }
 
-    public HealthCheckResult(HealthStatus status, string? statusMessage = null, List<string>? issues = null, IDictionary<string, object>? data = null)
+    public HealthCheck(HealthStatus status, string? statusMessage = null, List<string>? issues = null, IDictionary<string, object>? data = null)
     {
         Status = status;
         StatusMessage = statusMessage;
@@ -30,18 +30,18 @@ public record HealthCheckResult
         Data = data ?? new Dictionary<string, object>();
     }
 
-    public static HealthCheckResult Healthy(string? statusMessage = null, IDictionary<string, object>? data = null)
+    public static HealthCheck Healthy(string? statusMessage = null, IDictionary<string, object>? data = null)
     {
-        return new HealthCheckResult(status: HealthStatus.Healthy, statusMessage: statusMessage, data: data);
+        return new HealthCheck(status: HealthStatus.Healthy, statusMessage: statusMessage, data: data);
     }
 
-    public static HealthCheckResult Degraded(string? statusMessage = null, List<string>? issues = null, IDictionary<string, object>? data = null)
+    public static HealthCheck Degraded(string? statusMessage = null, List<string>? issues = null, IDictionary<string, object>? data = null)
     {
-        return new HealthCheckResult(HealthStatus.Degraded, statusMessage, issues, data);
+        return new HealthCheck(HealthStatus.Degraded, statusMessage, issues, data);
     }
 
-    public static HealthCheckResult Unhealthy(string? statusMessage = null, List<string>? issues = null, IDictionary<string, object>? data = null)
+    public static HealthCheck Unhealthy(string? statusMessage = null, List<string>? issues = null, IDictionary<string, object>? data = null)
     {
-        return new HealthCheckResult(HealthStatus.Unhealthy, statusMessage, issues, data);
+        return new HealthCheck(HealthStatus.Unhealthy, statusMessage, issues, data);
     }
 }

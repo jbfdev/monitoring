@@ -25,16 +25,16 @@ public static class ServiceRegistration
         Action<OpenTelemetryBuilder>? configureOpenTelemetry = null)
     {
         // Manifest
-        string applicationName = configuration["Manifest:Name"]
-            ?? Assembly.GetEntryAssembly()?.GetName().Name
-            ?? "UnknownApp";
+        var applicationName = configuration["Manifest:Name"]
+                              ?? Assembly.GetEntryAssembly()?.GetName().Name
+                              ?? "UnknownApp";
 
         var env = configuration["Manifest:Environment"]
             ?? environment.EnvironmentName;
 
         var systemStartup = TimeProvider.System.GetUtcNow();
 
-        services.AddSingleton(new Manifest()
+        services.AddSingleton(new Manifest
         {
             Environment = env,
             Name = applicationName,
@@ -95,12 +95,12 @@ public static class ServiceRegistration
 
     public static IApplicationBuilder UseMonitoring(this IApplicationBuilder app)
     {
-        app.UseHealthChecks("/health-probe", new HealthCheckOptions()
+        app.UseHealthChecks("/health-probe", new HealthCheckOptions
         {
-            Predicate = (_) => false
+            Predicate = _ => false
         });
 
-        app.UseHealthChecks("/health-check", new HealthCheckOptions()
+        app.UseHealthChecks("/health-check", new HealthCheckOptions
         {
             ResponseWriter = HealthCheckResponseWriter.WriteHealthCheckResponse
         });

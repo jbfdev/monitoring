@@ -1,5 +1,4 @@
-﻿using Grpc.Core;
-using JBF.Monitoring.Manifests;
+﻿using JBF.Monitoring.Manifests;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 
