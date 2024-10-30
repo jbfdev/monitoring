@@ -19,20 +19,17 @@ public static class HealthReportMapper
         {
             try
             {
-                if (!item.Value.Data.TryGetValue(nameof(HealthCheck.Updated), out var updatedObj)
-                    && updatedObj is not DateTimeOffset)
-                    continue;
-                var updated = (DateTimeOffset)updatedObj;
-            
-                if (!item.Value.Data.TryGetValue(nameof(HealthCheck.Issues), out var issuesObj)
-                    && issuesObj is not string[])
-                    continue;
-                var issues = (string[]?)issuesObj ?? [];
-            
-                if (!item.Value.Data.TryGetValue(nameof(HealthCheck.Updated), out var statusMessageObj)
-                    && statusMessageObj is not string)
-                    continue;
-                var statusMessage = (string)statusMessageObj;
+                var updated = item.Value.Data.TryGetValue(nameof(HealthCheck.Updated), out var updatedValue)
+                    ? (DateTimeOffset)updatedValue
+                    : DateTimeOffset.MinValue;
+
+                var issues = item.Value.Data.TryGetValue(nameof(HealthCheck.Issues), out var issuesValue)
+                    ? (string[]?)issuesValue ?? []
+                    : [];
+
+                var statusMessage = item.Value.Data.TryGetValue(nameof(HealthCheck.StatusMessage), out var messageValue)
+                        ? (string)messageValue
+                        : "";
 
                 HealthCheck healthCheckEntry = new(item.Value.Status)
                 {

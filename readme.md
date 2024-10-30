@@ -8,7 +8,7 @@ To comply with our monitoring requirements, all API must include the following e
   Provides a detailed health status report of the application based on registered health checks.
 
 - **Health Probe Endpoint** (`/health-probe`):  
-  Offers a quick, simplified status check (e.g., "Healthy", "Unhealthy") suitable for readiness probes or load balancers.
+  Offers a quick, simplified status check (e.g., "Healthy", "Degraded", "Unhealthy") suitable for readiness probes or load balancers.
 
 ## Implementation
 
@@ -17,7 +17,7 @@ To implement custom health checks, inherit the HealthCheckBase.
 ```csharp
 public class SampleHealthCheck : HealthCheckBase
 {
-    protected override Task<JBF.Monitoring.HealthChecks.HealthCheckResult> CheckHealth(HealthCheckContext context, CancellationToken ct = default)
+    protected override Task<JBF.Monitoring.HealthChecks.HealthCheck> CheckHealth(HealthCheckContext context, CancellationToken ct = default)
     {
         //Implement custom health check logic
     }
